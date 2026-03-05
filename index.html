@@ -84,7 +84,7 @@
     .eff-rows { flex: 1; }
     .r-eff {
       display: grid;
-      grid-template-columns: 14px 56px 56px 36px;
+      grid-template-columns: 14px 56px 56px 14px 36px 18px;
       justify-content: end;
       align-items: center;
       gap: 3px;
@@ -213,7 +213,7 @@
         <option value="1.5">×1.5</option>
       </select>
     </div>
-    <div class="r1"><label>必殺技倍率</label>
+    <div class="r1" style="grid-template-columns: 1fr 170px;"><label>必殺技倍率</label>
       <select id="suprRate">
         <option value="8.4">8.4 究極lv20</option>
         <option value="6.3">6.3 超絶特大lv15</option>
@@ -232,19 +232,25 @@
           <label>①</label>
           <input type="number" id="suprEff1Pct" min="0" class="ai">
           <input type="number" id="suprEff1DefPct" min="0" class="di">
+          <span class="x-mark">×</span>
           <input type="number" id="suprEff1Cnt" value="1" min="0">
+          <span class="x-mark">回</span>
         </div>
         <div class="r-eff">
           <label>②</label>
           <input type="number" id="suprEff2Pct" min="0" class="ai">
           <input type="number" id="suprEff2DefPct" min="0" class="di">
+          <span class="x-mark">×</span>
           <input type="number" id="suprEff2Cnt" value="1" min="0">
+          <span class="x-mark">回</span>
         </div>
         <div class="r-eff">
           <label>③</label>
           <input type="number" id="suprEff3Pct" min="0" class="ai">
           <input type="number" id="suprEff3DefPct" min="0" class="di">
+          <span></span>
           <span class="no-def">—</span>
+          <span></span>
         </div>
       </div>
     </div>
@@ -256,7 +262,7 @@
   <div id="result">
     <h2>計算結果</h2>
     <div class="result-grid">
-      <div class="result-item">
+      <div class="result-item" style="grid-column: 1 / -1;">
         <div class="result-label">必殺技ATK</div>
         <div class="result-value atk" id="resSuprAtk">---</div>
       </div>
@@ -264,7 +270,7 @@
         <div class="result-label">行動前DEF</div>
         <div class="result-value def" id="resEffDef">---</div>
       </div>
-      <div class="result-item" style="grid-column: 1 / -1;">
+      <div class="result-item">
         <div class="result-label">行動後DEF</div>
         <div class="result-value def" id="resAftDef">---</div>
       </div>
@@ -414,6 +420,7 @@
       document.getElementById(id).value = DEFAULTS[id] ?? '';
     });
     saveAll();
+    calc();
   }
 
   window.onload = () => { loadAll(); calc(); };
