@@ -28,18 +28,7 @@
       margin-bottom: 3px; padding-bottom: 2px;
       border-bottom: 1.5px solid #e0e0e0; color: #333;
     }
-    .sep { border: none; border-top: 1px dashed #ddd; margin: 3px 0 3px; }
-
-    .col-hd {
-      display: grid;
-      grid-template-columns: 1fr 72px 72px;
-      gap: 3px;
-      font-size: 0.63em;
-      color: #aaa;
-      text-align: center;
-      margin-bottom: 1px;
-    }
-    .col-hd span:first-child { text-align: left; }
+    .sep { border: none; border-top: 1px dashed #ddd; margin: 3px 0; }
 
     .r2 {
       display: grid;
@@ -68,13 +57,16 @@
       border: 1px solid #ccc;
       border-radius: 3px;
       font-size: 16px;
-      text-align: center;
+      text-align: right;
       background: #fff;
       appearance: none;
       -webkit-appearance: none;
     }
-    input[type="number"] { text-align: right; }
-    select { cursor: pointer; }
+    select { text-align: center; cursor: pointer; }
+
+    /* ATK/DEF 色分け */
+    .ai { background: #fff5f5; border-color: #f5aaaa; } /* ATK input */
+    .di { background: #f0f5ff; border-color: #aaaaf5; } /* DEF input */
 
     .no-def {
       border: 1px solid #eee;
@@ -86,16 +78,10 @@
       padding: 2px 0;
     }
 
-    .col-hd-eff {
-      display: grid;
-      grid-template-columns: 14px 56px 11px 36px 56px;
-      justify-content: end;
-      gap: 3px;
-      font-size: 0.63em;
-      color: #aaa;
-      text-align: center;
-      margin-bottom: 1px;
-    }
+    /* 必殺技効果ブロック：ラベルと入力行を横並び */
+    .eff-block { display: flex; align-items: flex-start; gap: 5px; }
+    .eff-title { font-size: 0.72em; color: #555; white-space: nowrap; padding-top: 4px; flex-shrink: 0; }
+    .eff-rows { flex: 1; }
     .r-eff {
       display: grid;
       grid-template-columns: 14px 56px 11px 36px 56px;
@@ -133,84 +119,81 @@
   <!-- 基礎 + リーダー -->
   <section>
     <h2>基礎ステータス・リーダースキル %</h2>
-    <div class="col-hd"><span></span><span>ATK</span><span>DEF</span></div>
     <div class="r2"><label>基礎</label>
-      <input type="number" id="baseAtk" value="0" min="0">
-      <input type="number" id="baseDef" value="0" min="0">
+      <input type="number" id="baseAtk" value="0" min="0" class="ai">
+      <input type="number" id="baseDef" value="0" min="0" class="di">
     </div>
     <div class="r2"><label>潜在</label>
-      <input type="number" id="potAtk" value="0" min="0">
-      <input type="number" id="potDef" value="0" min="0">
+      <input type="number" id="potAtk" value="0" min="0" class="ai">
+      <input type="number" id="potDef" value="0" min="0" class="di">
     </div>
     <div class="r2"><label>スキル玉 %</label>
-      <input type="number" id="ballAtk" value="0" min="0">
-      <input type="number" id="ballDef" value="0" min="0">
+      <input type="number" id="ballAtk" value="0" min="0" class="ai">
+      <input type="number" id="ballDef" value="0" min="0" class="di">
     </div>
     <hr class="sep">
     <div class="r2"><label>自リーダー</label>
-      <select id="leaderAtk"><option value="220" selected>220</option><option value="200">200</option><option value="170">170</option></select>
-      <select id="leaderDef"><option value="220" selected>220</option><option value="200">200</option><option value="170">170</option></select>
+      <select id="leaderAtk" class="ai"><option value="220" selected>220</option><option value="200">200</option><option value="170">170</option></select>
+      <select id="leaderDef" class="di"><option value="220" selected>220</option><option value="200">200</option><option value="170">170</option></select>
     </div>
     <div class="r2"><label>フレンド</label>
-      <select id="friendAtk"><option value="220" selected>220</option><option value="200">200</option><option value="170">170</option></select>
-      <select id="friendDef"><option value="220" selected>220</option><option value="200">200</option><option value="170">170</option></select>
+      <select id="friendAtk" class="ai"><option value="220" selected>220</option><option value="200">200</option><option value="170">170</option></select>
+      <select id="friendDef" class="di"><option value="220" selected>220</option><option value="200">200</option><option value="170">170</option></select>
     </div>
   </section>
 
   <!-- パッシブ -->
   <section>
     <h2>パッシブ %</h2>
-    <div class="col-hd"><span></span><span>ATK</span><span>DEF</span></div>
     <div class="r2"><label>A①</label>
-      <input type="number" id="passA1Atk" value="0">
-      <input type="number" id="passA1Def" value="0">
+      <input type="number" id="passA1Atk" value="0" class="ai">
+      <input type="number" id="passA1Def" value="0" class="di">
     </div>
     <div class="r2"><label>A②</label>
-      <input type="number" id="passA2Atk" value="0">
-      <input type="number" id="passA2Def" value="0">
+      <input type="number" id="passA2Atk" value="0" class="ai">
+      <input type="number" id="passA2Def" value="0" class="di">
     </div>
     <div class="r2"><label>サポート</label>
-      <input type="number" id="suppAtk" value="0">
-      <input type="number" id="suppDef" value="0">
+      <input type="number" id="suppAtk" value="0" class="ai">
+      <input type="number" id="suppDef" value="0" class="di">
     </div>
     <hr class="sep">
     <div class="r2"><label>被弾時</label>
-      <input type="number" id="hitAtk" value="0">
-      <input type="number" id="hitDef" value="0">
+      <input type="number" id="hitAtk" value="0" class="ai">
+      <input type="number" id="hitDef" value="0" class="di">
     </div>
     <div class="r2"><label>B①</label>
-      <input type="number" id="passBAtk1" value="0">
-      <input type="number" id="passBDef1" value="0">
+      <input type="number" id="passBAtk1" value="0" class="ai">
+      <input type="number" id="passBDef1" value="0" class="di">
     </div>
     <div class="r2"><label>B②</label>
-      <input type="number" id="passBAtk2" value="0">
-      <input type="number" id="passBDef2" value="0">
+      <input type="number" id="passBAtk2" value="0" class="ai">
+      <input type="number" id="passBDef2" value="0" class="di">
     </div>
   </section>
 
   <!-- その他補正 -->
   <section>
     <h2>その他補正 %</h2>
-    <div class="col-hd"><span></span><span>ATK</span><span>DEF</span></div>
     <div class="r2"><label>リンク</label>
-      <input type="number" id="linkAtk" value="0">
-      <input type="number" id="linkDef" value="0">
+      <input type="number" id="linkAtk" value="0" class="ai">
+      <input type="number" id="linkDef" value="0" class="di">
     </div>
     <div class="r2"><label>アクティブ</label>
-      <input type="number" id="activeAtk" value="0">
-      <input type="number" id="activeDef" value="0">
+      <input type="number" id="activeAtk" value="0" class="ai">
+      <input type="number" id="activeDef" value="0" class="di">
     </div>
     <div class="r2"><label>フィールド</label>
-      <input type="number" id="fieldAtk" value="0">
-      <input type="number" id="fieldDef" value="0">
+      <input type="number" id="fieldAtk" value="0" class="ai">
+      <input type="number" id="fieldDef" value="0" class="di">
     </div>
     <div class="r2"><label>Sメモリー</label>
-      <input type="number" id="memAtk" value="0">
-      <input type="number" id="memDef" value="0">
+      <input type="number" id="memAtk" value="0" class="ai">
+      <input type="number" id="memDef" value="0" class="di">
     </div>
     <div class="r2"><label>アイテム</label>
-      <input type="number" id="itemAtk" value="0">
-      <input type="number" id="itemDef" value="0">
+      <input type="number" id="itemAtk" value="0" class="ai">
+      <input type="number" id="itemDef" value="0" class="di">
     </div>
   </section>
 
@@ -238,31 +221,34 @@
       </select>
     </div>
     <hr class="sep">
-    <div style="font-size:0.72em; color:#555; margin-bottom:2px;">必殺技効果 %（加算）</div>
-    <div class="col-hd-eff"><span></span><span>ATK%</span><span></span><span>回数</span><span>DEF%</span></div>
-    <div class="r-eff">
-      <label>①</label>
-      <input type="number" id="suprEff1Pct" value="0" min="0">
-      <span class="x-mark">×</span>
-      <input type="number" id="suprEff1Cnt" value="1" min="0">
-      <input type="number" id="suprEff1DefPct" value="0" min="0">
+    <div class="eff-block">
+      <span class="eff-title">必殺技効果</span>
+      <div class="eff-rows">
+        <div class="r-eff">
+          <label>①</label>
+          <input type="number" id="suprEff1Pct" value="0" min="0" class="ai">
+          <span class="x-mark">×</span>
+          <input type="number" id="suprEff1Cnt" value="1" min="0">
+          <input type="number" id="suprEff1DefPct" value="0" min="0" class="di">
+        </div>
+        <div class="r-eff">
+          <label>②</label>
+          <input type="number" id="suprEff2Pct" value="0" min="0" class="ai">
+          <span class="x-mark">×</span>
+          <input type="number" id="suprEff2Cnt" value="1" min="0">
+          <input type="number" id="suprEff2DefPct" value="0" min="0" class="di">
+        </div>
+        <div class="r-eff">
+          <label>③</label>
+          <input type="number" id="suprEff3Pct" value="0" min="0" class="ai">
+          <span class="x-mark" style="visibility:hidden">×</span>
+          <span class="no-def">—</span>
+          <input type="number" id="suprEff3DefPct" value="0" min="0" class="di">
+        </div>
+      </div>
     </div>
-    <div class="r-eff">
-      <label>②</label>
-      <input type="number" id="suprEff2Pct" value="0" min="0">
-      <span class="x-mark">×</span>
-      <input type="number" id="suprEff2Cnt" value="1" min="0">
-      <input type="number" id="suprEff2DefPct" value="0" min="0">
-    </div>
-    <div class="r-eff">
-      <label>③</label>
-      <input type="number" id="suprEff3Pct" value="0" min="0">
-      <span class="x-mark" style="visibility:hidden">×</span>
-      <span class="no-def">—</span>
-      <input type="number" id="suprEff3DefPct" value="0" min="0">
-    </div>
-    <div class="r1"><label>必殺技威力 %</label>
-      <input type="number" id="suprPower" value="0">
+    <div class="r1"><label>必殺技威力UP</label>
+      <input type="number" id="suprPower" value="0" class="ai">
     </div>
     <hr class="sep">
     <div class="r1"><label>軽減率 %</label>
