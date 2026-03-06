@@ -416,51 +416,58 @@
   });
 
   function calc() {
-    const baseAtk = n('baseAtk') + n('potAtk') + n('baseAtk') * n('ballAtk') / 100;
-    const baseDef  = n('baseDef')  + n('potDef')  + n('baseDef')  * n('ballDef')  / 100;
+    const fl = Math.floor;
 
-    const leaderAtkMult = 1 + n('leaderAtk') / 100 + n('friendAtk') / 100;
-    const leaderDefMult = 1 + n('leaderDef') / 100 + n('friendDef') / 100;
+    // ①ステータス値
+    let atk    = fl(n('baseAtk') + n('potAtk') + n('baseAtk') * n('ballAtk') / 100);
+    let defBase = fl(n('baseDef') + n('potDef') + n('baseDef') * n('ballDef') / 100);
 
-    const passAAtkMult = 1 + n('passA1Atk') / 100 + n('passA2Atk') / 100 + n('suppAtk') / 100;
-    const passADefMult = 1 + n('passA1Def') / 100 + n('passA2Def') / 100 + n('suppDef') / 100;
+    // ②リーダースキル
+    atk    = fl(atk    * (1 + n('leaderAtk') / 100 + n('friendAtk') / 100));
+    defBase = fl(defBase * (1 + n('leaderDef') / 100 + n('friendDef') / 100));
 
-    const passBAllAtkMult = 1 + n('hitAtk') / 100 + n('passBAtk1') / 100 + n('passBAtk2') / 100;
-    const passBHitDefMult = 1 + n('hitDef') / 100;
-    const passBAllDefMult = 1 + n('hitDef') / 100 + n('passBDef1') / 100 + n('passBDef2') / 100;
+    // ③フィールド効果
+    atk    = fl(atk    * (1 + n('fieldAtk') / 100));
+    defBase = fl(defBase * (1 + n('fieldDef') / 100));
 
-    const otherAtkMult = (1 + n('linkAtk')  / 100)
-                       * (1 + n('activeAtk') / 100)
-                       * (1 + n('fieldAtk')  / 100)
-                       * (1 + (n('memAtk') + n('itemAtk')) / 100);
+    // ④パッシブスキル（DEFはここで行動前/後に分岐）
+    atk = fl(atk * (1 + n('passA1Atk') / 100 + n('passA2Atk') / 100 + n('suppAtk') / 100
+                      + n('hitAtk') / 100 + n('passBAtk1') / 100 + n('passBAtk2') / 100));
+    let defEff = fl(defBase * (1 + n('passA1Def') / 100 + n('passA2Def') / 100 + n('suppDef') / 100
+                                 + n('hitDef') / 100));
+    let defAft = fl(defBase * (1 + n('passA1Def') / 100 + n('passA2Def') / 100 + n('suppDef') / 100
+                                 + n('hitDef') / 100 + n('passBDef1') / 100 + n('passBDef2') / 100));
 
-    const otherDefMult = (1 + n('linkDef')  / 100)
-                       * (1 + n('activeDef') / 100)
-                       * (1 + n('fieldDef')  / 100)
-                       * (1 + (n('memDef') + n('itemDef')) / 100);
+    // ⑤サポートメモリー＆アイテム
+    atk    = fl(atk    * (1 + (n('memAtk') + n('itemAtk')) / 100));
+    defEff = fl(defEff * (1 + (n('memDef') + n('itemDef')) / 100));
+    defAft = fl(defAft * (1 + (n('memDef') + n('itemDef')) / 100));
 
+    // ⑥アクティブスキル
+    atk    = fl(atk    * (1 + n('activeAtk') / 100));
+    defEff = fl(defEff * (1 + n('activeDef') / 100));
+    defAft = fl(defAft * (1 + n('activeDef') / 100));
+
+    // ⑦リンクスキル
+    atk    = fl(atk    * (1 + n('linkAtk') / 100));
+    defEff = fl(defEff * (1 + n('linkDef') / 100));
+    defAft = fl(defAft * (1 + n('linkDef') / 100));
+
+    // ⑧気力ボーナス（ATKのみ）
     const kiBonusMult = parseFloat(document.getElementById('kiBonus').value) || 1;
+    atk = fl(atk * kiBonusMult);
+
+    // ⑨必殺技＆追加効果（四捨五入）
     const effAtkTotal = n('suprEff1Pct') * n('suprEff1Cnt')
                       + n('suprEff2Pct') * n('suprEff2Cnt')
                       + n('suprEff3Pct');
-    const suprRate    = parseFloat(document.getElementById('suprRate').value) || 1;
-    const suprFinalMult = suprRate + (effAtkTotal + n('suprPower')) / 100;
+    const suprRate = parseFloat(document.getElementById('suprRate').value) || 1;
+    const suprAtk = Math.round(atk * (suprRate + (effAtkTotal + n('suprPower')) / 100));
 
-    const suprAtk = baseAtk
-      * leaderAtkMult * passAAtkMult * passBAllAtkMult
-      * otherAtkMult * kiBonusMult * suprFinalMult;
-
-    const effDef12 = n('suprEff1DefPct') * n('suprEff1Cnt')
-                   + n('suprEff2DefPct') * n('suprEff2Cnt');
+    const effDef12  = n('suprEff1DefPct') * n('suprEff1Cnt') + n('suprEff2DefPct') * n('suprEff2Cnt');
     const effDef123 = effDef12 + n('suprEff3DefPct');
-
-    const effDef = baseDef
-      * leaderDefMult * passADefMult * passBHitDefMult
-      * otherDefMult * (1 + effDef12 / 100);
-
-    const aftDef = baseDef
-      * leaderDefMult * passADefMult * passBAllDefMult
-      * otherDefMult * (1 + effDef123 / 100);
+    const effDef = Math.round(defEff * (1 + effDef12  / 100));
+    const aftDef = Math.round(defAft * (1 + effDef123 / 100));
 
     const mit = 1 - n('mitigation') / 100;
     const hasGuard = document.getElementById('allGuard').value === '1';
