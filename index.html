@@ -348,8 +348,10 @@
     el.addEventListener('change', () => { saveAll(); calc(); });
     if (el.tagName === 'INPUT') {
       el.addEventListener('focus', () => {
-        const len = el.value.length;
-        el.setSelectionRange(len, len);
+        setTimeout(() => {
+          const len = el.value.length;
+          el.setSelectionRange(len, len);
+        }, 0);
       });
     }
   });
