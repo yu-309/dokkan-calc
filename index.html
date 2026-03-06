@@ -11,38 +11,38 @@
       background: #f0f0f0;
       color: #222;
       font-size: 13px;
-      padding: 5px;
+      padding: 4px;
     }
-    h1 { text-align: center; font-size: 0.95em; padding: 3px 0 5px; color: #c00; font-weight: bold; }
+    h1 { text-align: center; font-size: 0.95em; padding: 2px 0 3px; color: #c00; font-weight: bold; }
     .container { max-width: 480px; margin: 0 auto; }
 
     section {
       background: #fff;
       border-radius: 5px;
-      padding: 4px 7px 5px;
-      margin-bottom: 4px;
+      padding: 3px 7px 3px;
+      margin-bottom: 3px;
       box-shadow: 0 1px 2px rgba(0,0,0,0.08);
     }
     h2 {
       font-size: 0.75em; font-weight: bold;
-      margin-bottom: 3px; padding-bottom: 2px;
+      margin-bottom: 2px; padding-bottom: 1px;
       border-bottom: 1.5px solid #e0e0e0; color: #333;
     }
-    .sep { border: none; border-top: 1px dashed #ddd; margin: 3px 0; }
+    .sep { border: none; border-top: 1px dashed #ddd; margin: 2px 0; }
 
     .r2 {
       display: grid;
       grid-template-columns: 1fr 72px 72px;
       align-items: center;
       gap: 3px;
-      margin-bottom: 2px;
+      margin-bottom: 1px;
     }
     .r1 {
       display: grid;
       grid-template-columns: 1fr 110px;
       align-items: center;
       gap: 3px;
-      margin-bottom: 2px;
+      margin-bottom: 1px;
     }
     .r2 label, .r1 label {
       font-size: 0.76em;
@@ -53,7 +53,7 @@
 
     input[type="text"], select {
       width: 100%;
-      padding: 2px 3px;
+      padding: 1px 3px;
       border: 1px solid #ccc;
       border-radius: 3px;
       font-size: 16px;
@@ -64,7 +64,7 @@
     }
     select { text-align: center; cursor: pointer; }
 
-    /* ATK/DEF 色分け（input[type="text" inputmode="numeric"]より優先度を上げるためinput.ai形式に） */
+    /* ATK/DEF 色分け */
     input.ai, select.ai { background: #fff5f5; border-color: #f5aaaa; }
     input.di, select.di { background: #f0f5ff; border-color: #aaaaf5; }
 
@@ -75,12 +75,12 @@
       color: #ccc;
       font-size: 0.75em;
       text-align: center;
-      padding: 2px 0;
+      padding: 1px 0;
     }
 
     /* 必殺技効果ブロック：ラベルと入力行を横並び */
     .eff-block { display: flex; align-items: flex-start; gap: 5px; }
-    .eff-title { font-size: 0.72em; color: #555; white-space: nowrap; padding-top: 4px; flex-shrink: 0; }
+    .eff-title { font-size: 0.72em; color: #555; white-space: nowrap; padding-top: 3px; flex-shrink: 0; }
     .eff-rows { flex: 1; }
     .r-eff {
       display: grid;
@@ -88,25 +88,25 @@
       justify-content: end;
       align-items: center;
       gap: 3px;
-      margin-bottom: 2px;
+      margin-bottom: 1px;
     }
     .r-eff label { font-size: 0.76em; text-align: center; }
 
     button#resetBtn {
-      display: block; width: 100%; margin-top: 8px;
-      padding: 8px;
+      display: block; width: 100%; margin-top: 5px;
+      padding: 6px;
       background: #888; color: #fff; border: none;
       border-radius: 5px; font-size: 0.85em; font-weight: bold;
       cursor: pointer;
     }
     button#resetBtn:active { background: #555; }
 
-    #result { background: #fff; border-radius: 5px; padding: 5px 7px; box-shadow: 0 1px 2px rgba(0,0,0,0.08); }
+    #result { background: #fff; border-radius: 5px; padding: 3px 7px 5px; box-shadow: 0 1px 2px rgba(0,0,0,0.08); }
     #result h2 { color: #c00; border-bottom-color: #fcc; }
-    .result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; margin-top: 4px; }
-    .result-item { background: #f9f9f9; border-radius: 4px; padding: 4px 6px; }
-    .result-label { font-size: 0.65em; color: #777; margin-bottom: 1px; }
-    .result-value { font-size: 1.15em; font-weight: bold; }
+    .result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; margin-top: 3px; }
+    .result-item { background: #f9f9f9; border-radius: 4px; padding: 3px 5px; }
+    .result-label { font-size: 0.65em; color: #777; margin-bottom: 0; }
+    .result-value { font-size: 1.05em; font-weight: bold; }
     .result-value.atk { color: #c00; }
     .result-value.def { color: #006cc7; }
   </style>
