@@ -142,6 +142,15 @@
     #result { display: flex; gap: 4px; background: #fff; border-radius: 5px; padding: 3px 7px 5px 4px; box-shadow: 0 1px 2px rgba(0,0,0,0.08); }
     #result .sec-title { background: #c00; }
     .result-body { flex: 1; min-width: 0; }
+    #resultPosBtn {
+      font-size: 0.7em;
+      color: #aaa;
+      background: none;
+      border: 1px solid #ddd;
+      border-radius: 3px;
+      padding: 1px 6px;
+      cursor: pointer;
+    }
     .result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; margin-top: 3px; }
     .result-item { background: #f9f9f9; border-radius: 4px; padding: 3px 5px; }
     .result-label { font-size: 0.6em; color: #777; margin-bottom: 0; }
@@ -319,6 +328,9 @@
   <div id="result">
     <span class="sec-title">計算結果</span>
     <div class="result-body">
+    <div style="display:flex;justify-content:flex-end;margin-bottom:2px;">
+      <button id="resultPosBtn" onclick="toggleResultPosition()">↑ 上へ</button>
+    </div>
     <div class="result-grid">
       <div class="result-item" style="grid-column: 1 / -1;">
         <div class="result-label">必殺技ATK</div>
@@ -362,9 +374,9 @@
         <div class="result-value def" id="resSeal50Aft">---</div>
       </div>
     </div>
+    <button id="resetBtn" onclick="resetAll()">このタブをリセット</button>
     </div>
   </div>
-  <button id="resetBtn" onclick="resetAll()">このタブをリセット</button>
 
 </div>
 
@@ -419,6 +431,30 @@
     loadAll();
     syncGuardButtons();
     calc();
+  }
+
+  function toggleResultPosition() {
+    const container = document.querySelector('.container');
+    const result = document.getElementById('result');
+    const headerRow = document.querySelector('.header-row');
+    const isTop = result.previousElementSibling === headerRow;
+    if (isTop) {
+      container.appendChild(result);
+      document.getElementById('resultPosBtn').textContent = '↑ 上へ';
+      localStorage.setItem('dokkanCalcResultPos', 'bottom');
+    } else {
+      headerRow.insertAdjacentElement('afterend', result);
+      document.getElementById('resultPosBtn').textContent = '↓ 下へ';
+      localStorage.setItem('dokkanCalcResultPos', 'top');
+    }
+  }
+
+  function restoreResultPosition() {
+    if (localStorage.getItem('dokkanCalcResultPos') === 'top') {
+      const headerRow = document.querySelector('.header-row');
+      headerRow.insertAdjacentElement('afterend', document.getElementById('result'));
+      document.getElementById('resultPosBtn').textContent = '↓ 下へ';
+    }
   }
 
   function setGuard(val) {
@@ -541,6 +577,7 @@
     document.querySelectorAll('.tab').forEach((btn, i) => {
       btn.classList.toggle('active', i === currentTab);
     });
+    restoreResultPosition();
     loadAll();
     syncGuardButtons();
     calc();
