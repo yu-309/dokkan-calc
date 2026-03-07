@@ -27,11 +27,20 @@
       font-weight: bold;
       color: #666;
       cursor: pointer;
-      white-space: nowrap;
-      max-width: 72px;
-      overflow: hidden;
-      text-overflow: ellipsis;
     }
+    .guard-toggle { display: flex; gap: 3px; }
+    .gtoggle {
+      flex: 1;
+      padding: 1px 0;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      background: #e8e8e8;
+      font-size: 16px;
+      font-weight: bold;
+      color: #666;
+      cursor: pointer;
+    }
+    .gtoggle.active { background: #006cc7; color: #fff; border-color: #006cc7; }
     .tab.active { background: #c00; color: #fff; border-color: #c00; }
     .container { max-width: 480px; margin: 0 auto; }
 
@@ -329,10 +338,11 @@
       <input type="text" inputmode="numeric" id="mitigation" min="0" max="100">
     </div>
     <div class="r1"><label>全属性ガード</label>
-      <select id="allGuard">
-        <option value="0" selected>無</option>
-        <option value="1">有</option>
-      </select>
+      <div class="guard-toggle">
+        <button class="gtoggle active" onclick="setGuard(0)">無</button>
+        <button class="gtoggle" onclick="setGuard(1)">有</button>
+        <input type="hidden" id="allGuard" value="0">
+      </div>
     </div>
     <div class="result-grid" style="margin-top:5px;">
       <div class="result-item">
@@ -407,33 +417,20 @@
     localStorage.setItem('dokkanCalcTab', n);
     document.querySelectorAll('.tab').forEach((btn, i) => btn.classList.toggle('active', i === n));
     loadAll();
+    syncGuardButtons();
     calc();
   }
 
-  function renameTab(index) {
-    const current = localStorage.getItem(`dokkanCalcTabName_${index}`) || `タブ${index + 1}`;
-    const name = prompt('タブ名を入力してください', current);
-    if (name === null) return;
-    const displayName = name.trim() || `タブ${index + 1}`;
-    localStorage.setItem(`dokkanCalcTabName_${index}`, displayName);
-    document.querySelectorAll('.tab')[index].textContent = displayName;
+  function setGuard(val) {
+    document.getElementById('allGuard').value = val;
+    document.querySelectorAll('.gtoggle').forEach((btn, i) => btn.classList.toggle('active', i === val));
+    saveAll();
+    calc();
   }
 
-  function loadTabNames() {
-    document.querySelectorAll('.tab').forEach((btn, i) => {
-      const name = localStorage.getItem(`dokkanCalcTabName_${i}`);
-      if (name) btn.textContent = name;
-    });
-  }
-
-  function setupTabRename(btn, index) {
-    let pressTimer;
-    btn.addEventListener('touchstart', () => {
-      pressTimer = setTimeout(() => renameTab(index), 600);
-    }, { passive: true });
-    btn.addEventListener('touchend',  () => clearTimeout(pressTimer));
-    btn.addEventListener('touchmove', () => clearTimeout(pressTimer));
-    btn.addEventListener('dblclick',  () => renameTab(index));
+  function syncGuardButtons() {
+    const val = parseInt(document.getElementById('allGuard').value || '0');
+    document.querySelectorAll('.gtoggle').forEach((btn, i) => btn.classList.toggle('active', i === val));
   }
 
   INPUT_IDS.forEach(id => {
@@ -543,10 +540,9 @@
     currentTab = parseInt(localStorage.getItem('dokkanCalcTab') || '0');
     document.querySelectorAll('.tab').forEach((btn, i) => {
       btn.classList.toggle('active', i === currentTab);
-      setupTabRename(btn, i);
     });
-    loadTabNames();
     loadAll();
+    syncGuardButtons();
     calc();
   };
 </script>
