@@ -41,11 +41,14 @@
     .sec-title {
       writing-mode: vertical-rl;
       font-size: 0.85em;
-      color: #555;
+      color: #fff;
+      background: #222;
       font-weight: bold;
       white-space: nowrap;
       flex-shrink: 0;
       letter-spacing: 0.05em;
+      border-radius: 3px;
+      padding: 4px 2px;
     }
     .sec-body { flex: 1; min-width: 0; }
     .sep { border: none; border-top: 1px dashed #ddd; margin: 2px 0; }
@@ -122,7 +125,7 @@
     button#resetBtn:active { background: #555; }
 
     #result { display: flex; gap: 4px; background: #fff; border-radius: 5px; padding: 3px 7px 5px 4px; box-shadow: 0 1px 2px rgba(0,0,0,0.08); }
-    #result .sec-title { color: #c00; }
+    #result .sec-title { background: #c00; }
     .result-body { flex: 1; min-width: 0; }
     .result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; margin-top: 3px; }
     .result-item { background: #f9f9f9; border-radius: 4px; padding: 3px 5px; }
@@ -137,10 +140,10 @@
   <div class="header-row">
     <h1>ドッカンバトル 計算機</h1>
     <div class="tabs">
-      <button class="tab active" onclick="switchTab(0)">1</button>
-      <button class="tab" onclick="switchTab(1)">2</button>
-      <button class="tab" onclick="switchTab(2)">3</button>
-      <button class="tab" onclick="switchTab(3)">4</button>
+      <button class="tab active" onclick="switchTab(0)">タブ1</button>
+      <button class="tab" onclick="switchTab(1)">タブ2</button>
+      <button class="tab" onclick="switchTab(2)">タブ3</button>
+      <button class="tab" onclick="switchTab(3)">タブ4</button>
     </div>
   </div>
 
