@@ -531,12 +531,16 @@
 
   INPUT_IDS.forEach(id => {
     const el = document.getElementById(id);
+    let composing = false;
+    const sanitize = () => { el.value = el.value.replace(/[^\d]/g, ''); };
     const handler = () => {
-      if (el.tagName === 'INPUT') el.value = el.value.replace(/[^\d]/g, '');
+      if (el.tagName === 'INPUT' && !composing) sanitize();
       saveAll(); calc();
     };
     el.addEventListener(el.tagName === 'SELECT' ? 'change' : 'input', handler);
     if (el.tagName === 'INPUT') {
+      el.addEventListener('compositionstart', () => { composing = true; });
+      el.addEventListener('compositionend', () => { composing = false; sanitize(); saveAll(); calc(); });
       el.addEventListener('focus', () => {
         setTimeout(() => {
           const len = el.value.length;
