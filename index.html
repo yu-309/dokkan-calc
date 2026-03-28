@@ -547,8 +547,8 @@
     const fl = Math.floor;
 
     // ①ステータス値
-    let atk    = fl(n('baseAtk') + n('potAtk') + n('baseAtk') * n('ballAtk') / 100);
-    let defBase = fl(n('baseDef') + n('potDef') + n('baseDef') * n('ballDef') / 100);
+    let atk    = fl(n('baseAtk') + n('potAtk') + n('ballAtk'));
+    let defBase = fl(n('baseDef') + n('potDef') + n('ballDef'));
 
     // ②リーダースキル
     atk    = fl(atk    * (1 + n('leaderAtk') / 100 + n('friendAtk') / 100));
