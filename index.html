@@ -531,7 +531,10 @@
 
   INPUT_IDS.forEach(id => {
     const el = document.getElementById(id);
-    const handler = () => { saveAll(); calc(); };
+    const handler = () => {
+      if (el.tagName === 'INPUT') el.value = el.value.replace(/[^\d]/g, '');
+      saveAll(); calc();
+    };
     el.addEventListener(el.tagName === 'SELECT' ? 'change' : 'input', handler);
     if (el.tagName === 'INPUT') {
       el.addEventListener('focus', () => {
