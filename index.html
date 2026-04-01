@@ -146,6 +146,8 @@
     }
     .r-eff label { font-size: 0.76em; white-space: nowrap; }
     .x-mark { font-size: 0.75em; color: #888; text-align: center; }
+    .sel-wrap { position: relative; }
+    .sel-wrap input { position: absolute; inset: 0; width: 100%; height: 100%; font-size: 16px; text-align: right; border: 1px solid #ccc; border-radius: 3px; padding: 1px 3px; }
 
     button#resetBtn {
       display: block; width: 100%; margin-top: 3px;
@@ -232,12 +234,24 @@
       </div>
       <hr class="sep">
       <div class="r2"><label>自リーダー</label>
-        <select id="leaderAtk" class="ai"><option value="220" selected>220</option><option value="200">200</option><option value="170">170</option></select>
-        <select id="leaderDef" class="di"><option value="220" selected>220</option><option value="200">200</option><option value="170">170</option></select>
+        <div class="sel-wrap">
+          <select id="leaderAtk" class="ai" onchange="toggleCustom('leaderAtk')"><option value="220" selected>220</option><option value="200">200</option><option value="170">170</option><option value="custom">自分で入力</option></select>
+          <input type="text" inputmode="numeric" id="leaderAtkCustom" class="ai" style="display:none" placeholder="空欄で戻る" onblur="revertIfEmpty('leaderAtkCustom','leaderAtk')">
+        </div>
+        <div class="sel-wrap">
+          <select id="leaderDef" class="di" onchange="toggleCustom('leaderDef')"><option value="220" selected>220</option><option value="200">200</option><option value="170">170</option><option value="custom">自分で入力</option></select>
+          <input type="text" inputmode="numeric" id="leaderDefCustom" class="di" style="display:none" placeholder="空欄で戻る" onblur="revertIfEmpty('leaderDefCustom','leaderDef')">
+        </div>
       </div>
       <div class="r2"><label>フレンド</label>
-        <select id="friendAtk" class="ai"><option value="220" selected>220</option><option value="200">200</option><option value="170">170</option></select>
-        <select id="friendDef" class="di"><option value="220" selected>220</option><option value="200">200</option><option value="170">170</option></select>
+        <div class="sel-wrap">
+          <select id="friendAtk" class="ai" onchange="toggleCustom('friendAtk')"><option value="220" selected>220</option><option value="200">200</option><option value="170">170</option><option value="custom">自分で入力</option></select>
+          <input type="text" inputmode="numeric" id="friendAtkCustom" class="ai" style="display:none" placeholder="空欄で戻る" onblur="revertIfEmpty('friendAtkCustom','friendAtk')">
+        </div>
+        <div class="sel-wrap">
+          <select id="friendDef" class="di" onchange="toggleCustom('friendDef')"><option value="220" selected>220</option><option value="200">200</option><option value="170">170</option><option value="custom">自分で入力</option></select>
+          <input type="text" inputmode="numeric" id="friendDefCustom" class="di" style="display:none" placeholder="空欄で戻る" onblur="revertIfEmpty('friendDefCustom','friendDef')">
+        </div>
       </div>
     </div>
   </section>
@@ -430,6 +444,43 @@
   function n(id) {
     return parseFloat(document.getElementById(id).value) || 0;
   }
+
+  const CUSTOM_SELECTS = ['leaderAtk','leaderDef','friendAtk','friendDef'];
+  function leaderVal(id) {
+    const sel = document.getElementById(id);
+    if (sel.value === 'custom') return parseFloat(document.getElementById(id + 'Custom').value) || 0;
+    return parseFloat(sel.value) || 0;
+  }
+  function toggleCustom(selectId) {
+    const sel = document.getElementById(selectId);
+    const inp = document.getElementById(selectId + 'Custom');
+    if (sel.value === 'custom') {
+      sel.style.visibility = 'hidden';
+      inp.style.display = '';
+      inp.focus();
+    } else {
+      sel.style.visibility = '';
+      inp.style.display = 'none';
+    }
+    saveAll(); calc();
+  }
+  function revertIfEmpty(inputId, selectId) {
+    const inp = document.getElementById(inputId);
+    if (!inp.value.trim()) {
+      const sel = document.getElementById(selectId);
+      sel.value = sel.options[0].value;
+      toggleCustom(selectId);
+    }
+  }
+  function syncCustomInputs() {
+    CUSTOM_SELECTS.forEach(id => {
+      const sel = document.getElementById(id);
+      const inp = document.getElementById(id + 'Custom');
+      const isCustom = sel.value === 'custom';
+      inp.style.display = isCustom ? '' : 'none';
+      sel.style.visibility = isCustom ? 'hidden' : '';
+    });
+  }
   function fmt(num) {
     return Math.floor(num).toLocaleString('ja-JP');
   }
@@ -437,6 +488,7 @@
   const INPUT_IDS = [
     'baseAtk','baseDef','potAtk','potDef','ballAtk','ballDef',
     'leaderAtk','leaderDef','friendAtk','friendDef',
+    'leaderAtkCustom','leaderDefCustom','friendAtkCustom','friendDefCustom',
     'passA1Atk','passA1Def','passA2Atk','passA2Def','suppAtk','suppDef',
     'hitAtk','hitDef','passBAtk1','passBDef1','passBAtk2','passBDef2',
     'linkAtk','linkDef','activeAtk','activeDef',
@@ -476,6 +528,7 @@
     document.querySelectorAll('.tab').forEach((btn, i) => btn.classList.toggle('active', i === idx));
     loadAll();
     syncGuardButtons();
+    syncCustomInputs();
     calc();
   }
 
@@ -551,8 +604,8 @@
     let defBase = fl(n('baseDef') + n('potDef') + n('ballDef'));
 
     // ②リーダースキル
-    atk    = fl(atk    * (1 + n('leaderAtk') / 100 + n('friendAtk') / 100));
-    defBase = fl(defBase * (1 + n('leaderDef') / 100 + n('friendDef') / 100));
+    atk    = fl(atk    * (1 + leaderVal('leaderAtk') / 100 + leaderVal('friendAtk') / 100));
+    defBase = fl(defBase * (1 + leaderVal('leaderDef') / 100 + leaderVal('friendDef') / 100));
 
     // ③フィールド効果
     atk    = fl(atk    * (1 + n('fieldAtk') / 100));
@@ -640,6 +693,7 @@
     restoreResultPosition();
     loadAll();
     syncGuardButtons();
+    syncCustomInputs();
     calc();
   };
 </script>
